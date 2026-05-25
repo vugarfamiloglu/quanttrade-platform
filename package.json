@@ -1,0 +1,41 @@
+{
+  "name": "quanttrade-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "High-throughput trading infrastructure — event-sourced wallet, in-memory matching engine, saga-orchestrated clearing, distributed locking, idempotent gateway, observability built in.",
+  "scripts": {
+    "dev":              "tsx scripts/start-all.ts",
+    "dev:frontend":     "next dev frontend -p 5120",
+    "dev:gateway":      "tsx services/gateway/index.ts",
+    "dev:wallet":       "tsx services/wallet/index.ts",
+    "dev:matching":     "tsx services/matching/index.ts",
+    "dev:clearing":     "tsx services/clearing/index.ts",
+    "dev:market-data":  "tsx services/market-data/index.ts",
+    "build":  "next build frontend",
+    "start":  "tsx scripts/start-all.ts",
+    "seed":   "tsx scripts/seed.ts",
+    "smoke":  "tsx scripts/smoke.ts"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.5.0",
+    "express": "^4.21.1",
+    "jose": "^5.9.6",
+    "next": "^15.5.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.9.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}
