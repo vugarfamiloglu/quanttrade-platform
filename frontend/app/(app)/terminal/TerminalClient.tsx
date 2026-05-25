@@ -121,13 +121,19 @@ export function TerminalClient({ symbol, instruments, accounts, initialBook, ini
               <table className="t-table" style={{ width: '100%' }}>
                 <thead><tr><th>Bid Price</th><th style={{ textAlign: 'right' }}>Qty</th></tr></thead>
                 <tbody>
-                  {book.bids.map((r: any, idx: number) => (
-                    <tr key={idx} className="book-row">
-                      <td className="bid-text">{fmtRaw(r.price_raw, inst?.quote ?? 'USD')}</td>
-                      <td className="num">{fmtRaw(r.qty_raw, inst?.base ?? 'AAPL', { grouping: false })}</td>
-                      <div className="depth depth-bid" style={{ width: `${Math.min(100, (Number(r.qty_raw) / maxBidQty) * 100)}%` }} />
-                    </tr>
-                  ))}
+                  {book.bids.map((r: any, idx: number) => {
+                    /* Depth bar rendered as a row-wide background gradient.
+                     * Avoids the original mistake of putting a <div> inside
+                     * a <tr> — invalid HTML, browser auto-reparents, ergo
+                     * a hydration mismatch. */
+                    const pct = Math.min(100, (Number(r.qty_raw) / maxBidQty) * 100);
+                    return (
+                      <tr key={idx} className="book-row" style={{ background: `linear-gradient(to left, rgba(74, 222, 128, .10) ${pct}%, transparent ${pct}%)` }}>
+                        <td className="bid-text">{fmtRaw(r.price_raw, inst?.quote ?? 'USD')}</td>
+                        <td className="num">{fmtRaw(r.qty_raw, inst?.base ?? 'AAPL', { grouping: false })}</td>
+                      </tr>
+                    );
+                  })}
                   {book.bids.length === 0 ? <tr><td colSpan={2} style={{ padding: 16, textAlign: 'center', color: 'rgb(var(--muted))' }}>no bids</td></tr> : null}
                 </tbody>
               </table>
@@ -137,13 +143,17 @@ export function TerminalClient({ symbol, instruments, accounts, initialBook, ini
               <table className="t-table" style={{ width: '100%' }}>
                 <thead><tr><th>Ask Price</th><th style={{ textAlign: 'right' }}>Qty</th></tr></thead>
                 <tbody>
-                  {book.asks.map((r: any, idx: number) => (
-                    <tr key={idx} className="book-row">
-                      <td className="ask-text">{fmtRaw(r.price_raw, inst?.quote ?? 'USD')}</td>
-                      <td className="num">{fmtRaw(r.qty_raw, inst?.base ?? 'AAPL', { grouping: false })}</td>
-                      <div className="depth depth-ask" style={{ width: `${Math.min(100, (Number(r.qty_raw) / maxAskQty) * 100)}%` }} />
-                    </tr>
-                  ))}
+                  {book.asks.map((r: any, idx: number) => {
+                    /* Same fix as the bid side — gradient on the <tr>,
+                     * not an inline <div> child. */
+                    const pct = Math.min(100, (Number(r.qty_raw) / maxAskQty) * 100);
+                    return (
+                      <tr key={idx} className="book-row" style={{ background: `linear-gradient(to left, rgba(248, 113, 113, .10) ${pct}%, transparent ${pct}%)` }}>
+                        <td className="ask-text">{fmtRaw(r.price_raw, inst?.quote ?? 'USD')}</td>
+                        <td className="num">{fmtRaw(r.qty_raw, inst?.base ?? 'AAPL', { grouping: false })}</td>
+                      </tr>
+                    );
+                  })}
                   {book.asks.length === 0 ? <tr><td colSpan={2} style={{ padding: 16, textAlign: 'center', color: 'rgb(var(--muted))' }}>no asks</td></tr> : null}
                 </tbody>
               </table>
